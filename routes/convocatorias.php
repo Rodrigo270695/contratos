@@ -14,12 +14,12 @@ use Inertia\Inertia;
 */
 
 // Rutas públicas para docentes
-Route::prefix('convocatorias')->name('convocatorias.')->group(function () {
+Route::prefix('convocatorias-publicas')->name('convocatorias.')->group(function () {
 
     // Vista principal de convocatorias (página pública)
     Route::get('/', function () {
         return Inertia::render('convocatorias/index');
-    })->name('index');
+    })->name('public.index');
 
     // Detalle de una convocatoria específica
     Route::get('/{convocatoria}', function ($convocatoria) {

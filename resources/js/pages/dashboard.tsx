@@ -22,7 +22,7 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex flex-1 flex-col gap-4 rounded-xl p-4">
 
                 {/* Bienvenida personalizada */}
                 <div className="rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">

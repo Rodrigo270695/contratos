@@ -19,6 +19,7 @@ class Plaza extends Model
         'nivel',
         'especialidad',
         'jornada',
+        'monto_pago',
         'vacantes',
         'motivo_vacante',
         'requisitos',
@@ -28,6 +29,7 @@ class Plaza extends Model
     protected $casts = [
         'nivel' => 'string',
         'jornada' => 'string',
+        'monto_pago' => 'decimal:2',
         'vacantes' => 'integer',
         'status' => 'string',
     ];

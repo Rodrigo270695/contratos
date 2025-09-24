@@ -40,12 +40,12 @@ const structureNavGroups: NavGroup[] = [
             },
             {
                 title: 'Distritos',
-                href: '/distritos',
+                href: '/districts',
                 icon: Map,
             },
             {
                 title: 'Instituciones',
-                href: '/instituciones',
+                href: '/institutions',
                 icon: School,
             },
         ],

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Ugel extends Model
 {
@@ -39,6 +40,14 @@ class Ugel extends Model
     public function districts(): HasMany
     {
         return $this->hasMany(District::class);
+    }
+
+    /**
+     * Una UGEL tiene muchas instituciones a través de los distritos
+     */
+    public function institutions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Institution::class, District::class);
     }
 
     /**

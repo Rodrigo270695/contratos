@@ -1,31 +1,47 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Users, UserPlus } from 'lucide-react';
-import UserTable from '@/components/usuario/user-table';
-import UserFilters from '@/components/usuario/user-filters';
-import UserFormModal from '@/components/usuario/user-form-modal';
-import DeleteUserModal from '@/components/usuario/delete-user-modal';
+import { Map, Plus } from 'lucide-react';
+import DistrictTable from '@/components/district/district-table';
+import DistrictFilters from '@/components/district/district-filters';
+import DistrictFormModal from '@/components/district/district-form-modal';
+import DeleteDistrictModal from '@/components/district/delete-district-modal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 
-interface User {
+interface Ugel {
     id: number;
-    first_name: string;
-    last_name: string;
-    dni: string;
-    email: string;
-    phone?: string;
-    user_type: 'admin' | 'docente';
-    status: 'active' | 'inactive' | 'pending';
+    name: string;
+    code: string;
+    region: {
+        id: number;
+        name: string;
+    };
+}
+
+interface District {
+    id: number;
+    name: string;
+    code: string;
+    status: 'active' | 'inactive';
+    ugel_id: number;
+    ugel: {
+        id: number;
+        name: string;
+        code: string;
+        region: {
+            id: number;
+            name: string;
+        };
+    };
     created_at: string;
     updated_at: string;
 }
 
-interface UsersPageProps {
-    users: {
-        data: User[];
+interface DistrictsPageProps {
+    districts: {
+        data: District[];
         current_page: number;
         last_page: number;
         per_page: number;
@@ -33,10 +49,11 @@ interface UsersPageProps {
         from: number;
         to: number;
     };
+    ugels: Ugel[];
     filters: {
         search?: string;
-        user_type?: string;
         status?: string;
+        ugel_id?: string;
     };
 }
 
@@ -46,14 +63,14 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Usuarios',
-        href: '/usuarios',
+        title: 'Distritos',
+        href: '/districts',
     },
 ];
 
-export default function UsuarioIndex() {
-    const { users, filters } = usePage<SharedData & UsersPageProps>().props;
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+export default function DistrictIndex() {
+    const { districts, ugels, filters } = usePage<SharedData & DistrictsPageProps>().props;
+    const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
     const [modalState, setModalState] = useState({
         form: false,
         delete: false,
@@ -61,73 +78,73 @@ export default function UsuarioIndex() {
     const toast = useToast();
 
     const openCreateModal = () => {
-        setSelectedUser(null);
+        setSelectedDistrict(null);
         setModalState({ form: true, delete: false });
     };
 
-    const openEditModal = (user: User) => {
-        setSelectedUser(user);
+    const openEditModal = (district: District) => {
+        setSelectedDistrict(district);
         setModalState({ form: true, delete: false });
     };
 
-    const openDeleteModal = (user: User) => {
-        setSelectedUser(user);
+    const openDeleteModal = (district: District) => {
+        setSelectedDistrict(district);
         setModalState({ form: false, delete: true });
     };
 
     const closeModals = () => {
-        setSelectedUser(null);
+        setSelectedDistrict(null);
         setModalState({ form: false, delete: false });
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Gestión de Usuarios" />
+            <Head title="Gestión de Distritos" />
 
             <div className="flex flex-1 flex-col gap-6 p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 shadow-lg">
-                            <Users className="h-6 w-6 text-white" />
+                            <Map className="h-6 w-6 text-white" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                Gestión de Usuarios
+                                Gestión de Distritos
                             </h1>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Administra usuarios del sistema UGEL Lambayeque
+                                Administra los distritos del sistema educativo
                             </p>
                         </div>
                     </div>
-
                 </div>
 
-
                 {/* Filters and Actions */}
-                <UserFilters
+                <DistrictFilters
                     filters={filters}
-                    onCreateUser={openCreateModal}
+                    ugels={ugels}
+                    onNewDistrict={openCreateModal}
                 />
 
-                {/* Users Table */}
-                <UserTable
-                    users={users}
-                    onEditUser={openEditModal}
-                    onDeleteUser={openDeleteModal}
+                {/* Districts Table */}
+                <DistrictTable
+                    districts={districts}
+                    onEdit={openEditModal}
+                    onDelete={openDeleteModal}
                 />
 
                 {/* Modales */}
-                <UserFormModal
+                <DistrictFormModal
                     isOpen={modalState.form}
-                    user={selectedUser}
+                    district={selectedDistrict}
+                    ugels={ugels}
                     onClose={closeModals}
                 />
 
-                {selectedUser && (
-                    <DeleteUserModal
+                {selectedDistrict && (
+                    <DeleteDistrictModal
                         isOpen={modalState.delete}
-                        user={selectedUser}
+                        district={selectedDistrict}
                         onClose={closeModals}
                     />
                 )}
@@ -137,9 +154,9 @@ export default function UsuarioIndex() {
                     <Button
                         onClick={openCreateModal}
                         className="h-14 w-14 rounded-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
-                        title="Crear Administrador"
+                        title="Crear Distrito"
                     >
-                        <UserPlus className="h-6 w-6" />
+                        <Plus className="h-6 w-6" />
                     </Button>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { dashboard, login, register } from '@/routes';
 import { Link } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
-import { User, ChevronDown, LogIn, UserPlus, LayoutDashboard, LogOut } from 'lucide-react';
+import { User, ChevronDown, LogIn, UserPlus, LayoutDashboard, LogOut, Brain } from 'lucide-react';
 
 interface DropdownAccessProps {
     user?: {
@@ -91,6 +91,18 @@ export default function DropdownAccess({ user }: DropdownAccessProps) {
                                     >
                                         <LayoutDashboard className="w-4 h-4 mr-3" />
                                         Panel Administrativo
+                                    </Link>
+                                )}
+
+                                {/* Sistema de IA (solo para docentes) */}
+                                {user.user_type === 'docente' && (
+                                    <Link
+                                        href="/mi-perfil-docente"
+                                        className="flex items-center px-4 py-2 text-sm text-blue-800 hover:bg-blue-50 dark:text-blue-200 dark:hover:bg-blue-900/20 transition-colors"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                    >
+                                        <Brain className="w-4 h-4 mr-3" />
+                                        🤖 Sistema de IA
                                     </Link>
                                 )}
 

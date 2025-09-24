@@ -4,6 +4,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
+import SimplePaymentWrapper from './components/payment/SimplePaymentWrapper';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -13,7 +14,17 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        // Sistema de protección de pagos SIMPLE
+        // Para desactivar: disabled={true}
+        // Para probar vencido: testVencido={true}
+        root.render(
+            <SimplePaymentWrapper
+                disabled={false}
+                testVencido={false}
+            >
+                <App {...props} />
+            </SimplePaymentWrapper>
+        );
     },
     progress: {
         color: '#4B5563',
